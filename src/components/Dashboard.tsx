@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import wmataService from "../api/wmata";
+import { wmataClient } from "../api/wmata";
 
 interface DashboardProps {
     stationCode: string
@@ -9,7 +9,7 @@ export const Dashboard = (props: DashboardProps) => {
     const [station, setStation] = useState<string>('');
 
     useEffect(() => {
-        wmataService.getRailPredictionsForStation(props.stationCode)
+        wmataClient.getRailPredictionsForStation(props.stationCode)
             .then(initialStation => setStation(initialStation))
             .catch(() => setStation(''));
     }, [props.stationCode]);

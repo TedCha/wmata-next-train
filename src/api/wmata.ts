@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { mock } from '../util';
 import mockStationData from '../data/mockStationData.wmata.json';
 import mockPredictionData from '../data/mockStationData.wmata.json';
 
@@ -8,37 +9,25 @@ const WMATA_API_CONFIG: AxiosRequestConfig = {
     headers: { 'api_key': process.env.REACT_APP_WMATA_API_KEY as string }
 };
 
-const reqWithConfig = async (mthd: string, url: string) => {
-    const response = await axios({ method: mthd, url: url, ...WMATA_API_CONFIG });
-    return response.data;
-};
+class WmataClient {
 
-const getRailStationList = () => {
-    if (DEBUG) {
-        return new Promise<any>((resolve) => {
-            setTimeout(() => {
-                resolve(mockStationData);
-            }, 500);
-        });
-    }
+    private reqWithConfig = async (mthd: string, url: string) => {
+        const response = await axios({ method: mthd, url: url, ...WMATA_API_CONFIG });
+        return response.data;
+    };
 
-    const apiUrl = `${BASE_URL}/Rail.svc/json/jStations`;
-    return reqWithConfig('GET', apiUrl);
-};
+    @mock(DEBUG, 500, mockStationData)
+    public getRailStationList() {
+        const apiUrl = `${BASE_URL}/Rail.svc/json/jStations`;
+        return this.reqWithConfig('GET', apiUrl);
+    };
 
-const getRailPredictionsForStation = (stationCode: string) => {
-    if (DEBUG) {
-        return new Promise<any>((resolve) => {
-            setTimeout(() => {
-                resolve(mockPredictionData);
-            }, 500);
-        });
-    }
+    @mock(DEBUG, 500, mockPredictionData)
+    public getRailPredictionsForStation(stationCode: string) {
+        const apiUrl = `${BASE_URL}/StationPrediction.svc/json/GetPrediction/${stationCode}`;
+        return this.reqWithConfig('GET', apiUrl);
+    };
 
-    const apiUrl = `${BASE_URL}/StationPrediction.svc/json/GetPrediction/${stationCode}`;
-    return reqWithConfig('GET', apiUrl);
-};
+}
 
-const wmataService = { getRailStationList, getRailPredictionsForStation };
-
-export default wmataService;
+export const wmataClient = new WmataClient();

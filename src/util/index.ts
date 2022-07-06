@@ -32,7 +32,23 @@ export const getDistanceInMeters = (lat1: number, lon1: number, lat2: number, lo
         Math.pow(Math.sin(deltaLon / 2), 2)
         ;
 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return (EARTH_RADIUS_IN_KM * c) * 1000; // distance in m
 };
+
+
+export function mock(condition: boolean, timeout: number, data: any): any {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        if (typeof descriptor.value !== 'function') return;
+        if (condition) {
+            descriptor.value = () => {
+                return new Promise<any>((resolve) => {
+                    setTimeout(() => {
+                        resolve(data);
+                    }, timeout);
+                });
+            };
+        }
+    };
+}

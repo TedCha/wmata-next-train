@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import wmataService from './api/wmata';
-import { getPosition, getDistanceInMeters } from './util/utils';
+import { wmataClient } from './api/wmata';
+import { getPosition, getDistanceInMeters } from './util';
 import { Dashboard } from './components/Dashboard';
 
 const Wrapper = styled.div`
@@ -20,7 +20,7 @@ const App = () => {
 
     useEffect(() => {
         if (executedStationFetchRef.current) return;
-        wmataService.getRailStationList()
+        wmataClient.getRailStationList()
             .then(initialStations => setStations(initialStations))
             .catch(() => setStations([]));
         executedStationFetchRef.current = true;
