@@ -1,33 +1,38 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { mock } from '../util';
+import { mockd } from '../util';
 import mockStationData from '../data/mockStationData.wmata.json';
 import mockPredictionData from '../data/mockStationData.wmata.json';
 
 const DEBUG = process.env.REACT_APP_IS_DEV === 'true';
-const BASE_URL = 'https://api.wmata.com';
-const WMATA_API_CONFIG: AxiosRequestConfig = {
-    headers: { 'api_key': process.env.REACT_APP_WMATA_API_KEY as string }
-};
 
 class WmataClient {
+    private baseUrl: string;
+    private apiKey: string;
+    private requestConfig: AxiosRequestConfig;
+
+    constructor(baseUrl: string, apiKey: string) {
+        this.baseUrl = baseUrl;
+        this.apiKey = apiKey;
+        this.requestConfig = { headers: { 'api_key': this.apiKey } };
+    }
 
     private reqWithConfig = async (mthd: string, url: string) => {
-        const response = await axios({ method: mthd, url: url, ...WMATA_API_CONFIG });
+        const response = await axios({ method: mthd, url: url, ...this.requestConfig });
         return response.data;
     };
 
-    @mock(DEBUG, 500, mockStationData)
+    @mockd(DEBUG, 500, mockStationData)
     public getRailStationList() {
-        const apiUrl = `${BASE_URL}/Rail.svc/json/jStations`;
+        const apiUrl = `${this.baseUrl}/Rail.svc/json/jStations`;
         return this.reqWithConfig('GET', apiUrl);
     };
 
-    @mock(DEBUG, 500, mockPredictionData)
+    @mockd(DEBUG, 500, mockPredictionData)
     public getRailPredictionsForStation(stationCode: string) {
-        const apiUrl = `${BASE_URL}/StationPrediction.svc/json/GetPrediction/${stationCode}`;
+        const apiUrl = `${this.baseUrl}/StationPrediction.svc/json/GetPrediction/${stationCode}`;
         return this.reqWithConfig('GET', apiUrl);
     };
 
 }
 
-export const wmataClient = new WmataClient();
+export const wmataClient = new WmataClient('https://api.wmata.com', process.env.REACT_APP_WMATA_API_KEY as string);
