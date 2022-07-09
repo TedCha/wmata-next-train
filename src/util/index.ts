@@ -36,25 +36,3 @@ export const getDistanceInMeters = (lat1: number, lon1: number, lat2: number, lo
 
     return (EARTH_RADIUS_IN_KM * c) * 1000; // distance in m
 };
-
-/**
- * Overrides a function that returns Promise<any> with mock data
- * @param condition condition to evaluate if mock data should be returned
- * @param timeout timeout to wait to simulate response time
- * @param data the data to be returned with the Promise
- * @returns {any} Promise<any> of passed in data
- */
-export function mockd(condition: boolean, timeout: number, data: any): any {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        if (typeof descriptor.value !== 'function') return;
-        if (condition) {
-            descriptor.value = () => {
-                return new Promise<any>((resolve) => {
-                    setTimeout(() => {
-                        resolve(data);
-                    }, timeout);
-                });
-            };
-        }
-    };
-}

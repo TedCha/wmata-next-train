@@ -4,11 +4,12 @@ import { wmataClient } from './api/wmata';
 import { getPosition, getDistanceInMeters } from './util';
 import { Dashboard } from './components/Dashboard';
 import { StationData } from './types';
+import { Dropdown } from './components/Dropdown';
 
 const Wrapper = styled.div`
     background-color: red;
     max-width: 120rem;
-    margin: 8rem auto;
+    margin: 4rem auto;
     min-height: 50rem;
 `;
 
@@ -16,8 +17,7 @@ const App = () => {
     const executedStationFetchRef = useRef(false);
     const executedUserCoordinatesFetchRef = useRef(false);
     const [stations, setStations] = useState<StationData[]>();
-    const [userCoordinates, setUserCoordinates] = useState<GeolocationCoordinates>();
-    const [currentStation, setCurrentStation] = useState('');
+    const [currentStationCode, setCurrentStationCode] = useState<string>();
 
     useEffect(() => {
         if (executedStationFetchRef.current) return;
@@ -30,22 +30,22 @@ const App = () => {
     useEffect(() => {
         if (executedUserCoordinatesFetchRef.current) return;
         getPosition()
-            .then(initialPosition => setUserCoordinates(initialPosition.coords))
+            .then(() => {
+                // TODO: Create function that determines if a metro station is in range of user location
+                setCurrentStationCode('C08');
+            })
             .catch(); // TODO: catch exceptions
-            executedUserCoordinatesFetchRef.current = true;
+        executedUserCoordinatesFetchRef.current = true;
     }, []);
-
-    /* 
-    TODO:
-    * Implement Dashboard component; use prediction call within component
-    * Create function that determines if a metro station is in range of user location
-    * Create dropdown for selecting metro station (if no location or user override)
-    * Style Dashboard component
-    */
 
     return (
         <Wrapper>
-            <Dashboard stationCode=''></Dashboard>
+            <Dropdown 
+                stations={stations} 
+                stationCode={currentStationCode} 
+                setStationCode={setCurrentStationCode} 
+            />
+            <Dashboard stationCode={currentStationCode} />
         </Wrapper>
     );
 };

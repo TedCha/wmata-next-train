@@ -1,0 +1,4 @@
+{
+    "/Rail.svc/json/jStations": "/stations",
+    "/StationPrediction.svc/json/GetPrediction/:id": "/predictions/:id"
+}
