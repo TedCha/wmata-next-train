@@ -4,46 +4,65 @@ import { wmataClient } from "../api/wmata";
 import { PredictionData } from "../types";
 
 const Container = styled.div`
-    flex-direction: column;
-    justify-content: space-between;
-    /* Linear Font Size Equation: 
-    https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/ */
-    font-size: clamp(2.6rem, 1.8953rem + 1.8792vw, 4rem);
+    /* 
+    Linear Font Size Equation: 
+    https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/ 
+    */
+    font-size: clamp(3.2rem, 2.0182rem + 3.1515vw, 5.8rem);
+    font-family: 'VT323', monospace;
     text-transform: uppercase;
-    background-color: blue;
     margin: auto 4rem;
     overflow-y: scroll;
-    max-height: 50rem;
+    max-height: 75vh;
+
 `;
 
 const Table = styled.table`
+    /* Variables */
+    --font-color-table-header: #ff3c31;
+    --font-color-table-data: #f7d53e;
+    --background-color-table-nth: #1c1c1c;
+
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    
+
     th, td {
         text-align: center;
         vertical-align: middle;
     }
 
+    th {
+        color: var(--font-color-table-header);
+    }
+
+    td {
+        color: var(--font-color-table-data);
+    }
+
     @media screen and (max-width: 600px) {
-        /* Force table to not be like tables anymore */
+        /* force table to not act like a table */
 	    table, thead, tbody, 
 	    th, td, tr { 
 		    display: block;
 	    }
 
+        /* make table header row disappear */
         thead tr { 
             display: none;
         }
 
-        /* Zebra striping */
+        /* table zebra striping */
         tr:nth-of-type(odd) { 
-        background: #eee; 
+            background: var(--background-color-table-nth); 
         }
 
+        tr {
+            padding: 0.8rem 0;
+        }
+
+        /* Make table data behave like a "row" */
         td { 
-            /* Behave like a "row" */
             border: none;
             position: relative;
             padding-left: 50%;
@@ -51,16 +70,12 @@ const Table = styled.table`
             text-align:left;
         }
 
-        td:before { 
-            /* Now like a table header */
+        td:before {
+            color: var(--font-color-table-header);
             position: absolute;
-            /* Top/left values mimic padding */
-            top: 6px;
-            left: 6px;
-            width: 45%; 
-            padding-right: 10px; 
+            left: 0%;
             white-space: nowrap;
-            text-align:left;
+            vertical-align: middle;
             font-weight: bold;
             content: attr(data-title); 
         }
@@ -71,7 +86,6 @@ interface DashboardProps {
     stationCode?: string
 }
 
-// TODO: Style
 export const Dashboard = (props: DashboardProps) => {
     const [predictions, setPredictions] = useState<(PredictionData[])>();
 
@@ -79,7 +93,7 @@ export const Dashboard = (props: DashboardProps) => {
         if (props?.stationCode) {
             wmataClient.getRailPredictionsForStation(props?.stationCode)
             .then(initialPredictions => setPredictions(initialPredictions.Trains))
-            .catch(); // TODO: Handle exception
+            .catch(); // TODO: Handle exceptions
         }
     }, [props?.stationCode]);
 

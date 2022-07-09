@@ -3,8 +3,15 @@ import { StationData } from "../types";
 import { Dispatch, SetStateAction } from "react";
 
 const Container = styled.div`
+    padding-bottom: 2rem;
+    padding-right: 4rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: right;
+`;
+
+const Select = styled.select`
+    min-width: 20rem;
 `;
 
 interface DropdownProps {
@@ -17,13 +24,13 @@ interface DropdownProps {
 export const Dropdown = (props: DropdownProps) => {
     return (
         <Container>
-            <select value={props.stationCode} onChange={(event) => {props.setStationCode(event.target.value);}}>
+            <Select value={props.stationCode} onChange={(event) => {props.setStationCode(event.target.value);}}>
                 {props?.stations?.map((station, i) => {
                     return (
                         <option key={i} value={station.Code}>{station.Name}</option>
                     );
                 })}
-            </select>
+            </Select>
         </Container>
     );
 };

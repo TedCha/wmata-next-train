@@ -7,10 +7,9 @@ import { StationData } from './types';
 import { Dropdown } from './components/Dropdown';
 
 const Wrapper = styled.div`
-    background-color: red;
     max-width: 120rem;
     margin: 4rem auto;
-    min-height: 50rem;
+    min-height: 100%;
 `;
 
 const App = () => {
@@ -23,7 +22,7 @@ const App = () => {
         if (executedStationFetchRef.current) return;
         wmataClient.getRailStationList()
             .then(initialStations => setStations(initialStations.Stations))
-            .catch(); // TODO: catch exceptions
+            .catch(); // TODO: Handle exceptions
         executedStationFetchRef.current = true;
     }, []);
 
@@ -34,7 +33,7 @@ const App = () => {
                 // TODO: Create function that determines if a metro station is in range of user location
                 setCurrentStationCode('C08');
             })
-            .catch(); // TODO: catch exceptions
+            .catch(); // TODO: Handle exceptions
         executedUserCoordinatesFetchRef.current = true;
     }, []);
 

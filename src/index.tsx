@@ -21,7 +21,13 @@ html {
 }
 
 body {
-    max-height: 100vh;
+    /* Variables */
+    --background-color-app: black;
+    --border-color-app: #3c3c3c;
+
+    background-color: var(--background-color-app);
+    border: 1rem solid var(--border-color-app);
+    min-height: 100vh;
 }
 `;
 
