@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { mockd } from '../util';
 import mockStationData from '../data/mockStationData.wmata.json';
-import mockPredictionData from '../data/mockStationData.wmata.json';
+import mockPredictionData from '../data/mockPredictionData.wmata.json';
 
 const DEBUG = process.env.REACT_APP_IS_DEV === 'true';
 
