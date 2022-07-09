@@ -16,14 +16,14 @@ const App = () => {
     const executedStationFetchRef = useRef(false);
     const executedUserCoordinatesFetchRef = useRef(false);
     const [stations, setStations] = useState<StationData[]>();
-    const [userCoordinates, setUserCoordinates] = useState<GeolocationCoordinates | null>(null);
+    const [userCoordinates, setUserCoordinates] = useState<GeolocationCoordinates>();
     const [currentStation, setCurrentStation] = useState('');
 
     useEffect(() => {
         if (executedStationFetchRef.current) return;
         wmataClient.getRailStationList()
             .then(initialStations => setStations(initialStations.Stations))
-            .catch(() => setStations([]));
+            .catch(); // TODO: catch exceptions
         executedStationFetchRef.current = true;
     }, []);
 
